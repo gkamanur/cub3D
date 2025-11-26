@@ -1,4 +1,5 @@
 #include "../../includes/rendering.h"
+#include <string.h>
 
 // Initialize image buffer for fast rendering
 int	init_image(t_data *data)

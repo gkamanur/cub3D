@@ -96,6 +96,8 @@ int	validate_map(t_map *map, t_player *player)
 	int		player_count;
 	char	player_dir;
 
+	player_dir = 'N';  // Default, will be overwritten
+
 	if (!map->grid || map->width == 0 || map->height == 0)
 	{
 		printf("Error\nEmpty map\n");

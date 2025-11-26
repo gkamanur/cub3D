@@ -144,30 +144,40 @@ static void	cast_ray(t_data *data, int x)
 // Main raycasting function - casts rays for all screen columns
 void	raycast(t_data *data)
 {
-	int	x;
-	int	step;
+	int		x;
+	int		step;
+	int		bytes_per_pixel;
 
-	// Adaptive quality: skip rays at very high resolutions for better performance
-	if (WIN_WIDTH > 1920)
-		step = 2;  // Cast every 2nd ray and stretch result
+	// Adaptive quality: more aggressive at higher resolutions
+	if (WIN_WIDTH >= 2000)
+		step = 3;  // Cast every 3rd ray - good quality at high res
+	else if (WIN_WIDTH > 1600)
+		step = 2;  // Cast every 2nd ray
 	else
 		step = 1;  // Full quality
 
+	bytes_per_pixel = data->img.bits_per_pixel / 8;
 	x = 0;
 	while (x < WIN_WIDTH)
 	{
 		cast_ray(data, x);
-		// If we're skipping rays, copy the result to the next column
-		if (step == 2 && x + 1 < WIN_WIDTH)
+		
+		// Fast column duplication using direct memory copy
+		if (step > 1)
 		{
-			int y = 0;
-			while (y < WIN_HEIGHT)
+			int dup;
+			for (dup = 1; dup < step && (x + dup) < WIN_WIDTH; dup++)
 			{
-				// Copy pixel from current column to next
-				char *src = data->img.addr + (y * data->img.line_length + x * (data->img.bits_per_pixel / 8));
-				char *dst = data->img.addr + (y * data->img.line_length + (x + 1) * (data->img.bits_per_pixel / 8));
-				*(unsigned int *)dst = *(unsigned int *)src;
-				y++;
+				int y;
+				char *src_col = data->img.addr + (x * bytes_per_pixel);
+				char *dst_col = data->img.addr + ((x + dup) * bytes_per_pixel);
+				
+				// Copy entire column at once (much faster!)
+				for (y = 0; y < WIN_HEIGHT; y++)
+				{
+					*(unsigned int *)(dst_col + y * data->img.line_length) = 
+					*(unsigned int *)(src_col + y * data->img.line_length);
+				}
 			}
 		}
 		x += step;
