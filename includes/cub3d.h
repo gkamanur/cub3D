@@ -15,8 +15,8 @@
    ======================================== */
 
 // Window settings
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_WIDTH 3840
+# define WIN_HEIGHT 2160
 # define WIN_TITLE "Cub3D"
 
 // Key codes (Linux)
