@@ -19,6 +19,7 @@ char	**ft_split(char *str, char delimiter);
 // Config parsing (parser_config.c)
 int		parse_texture(char *line, t_textures *textures);
 int		parse_color(char *line, t_color *floor, t_color *ceiling);
+int		parse_cf_texture(char *line, t_textures *textures);
 
 // Map parsing (parser_map.c)
 int		parse_map(int fd, t_data *data);

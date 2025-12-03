@@ -1,5 +1,6 @@
 #include "../../includes/parsing.h"
 
+// Initialize player direction vectors based on starting orientation
 void	init_player_direction(t_player *player, char direction)
 {
 	if (direction == 'N')
@@ -108,7 +109,23 @@ int	parse_map(int fd, t_data *data)
 	if (!temp_lines)
 		return (0);
 	count = 0;
-	// Read all map lines
+	// Use first_line if it was saved during config parsing
+	if (data->map.first_line)
+	{
+		if (is_map_line(data->map.first_line))
+		{
+			temp_lines[count++] = data->map.first_line;
+			data->map.first_line = NULL; // Clear it so we don't free twice
+		}
+		else
+		{
+			free(data->map.first_line);
+			data->map.first_line = NULL;
+			free(temp_lines);
+			return (0);
+		}
+	}
+	// Read all remaining map lines
 	while ((line = get_next_line(fd)) != NULL)
 	{
 		if (is_map_line(line))

@@ -113,3 +113,40 @@ int	parse_color(char *line, t_color *floor, t_color *ceiling)
 	free(trimmed);
 	return (result);
 }
+
+// Parse ceiling/floor texture: "FT path.xpm" or "CT path.xpm"
+int	parse_cf_texture(char *line, t_textures *textures)
+{
+	char	*trimmed;
+	char	*path;
+	char	**dest;
+
+	trimmed = ft_strtrim(line);
+	if (!trimmed)
+		return (0);
+	dest = NULL;
+	if (strncmp(trimmed, "FT ", 3) == 0 && !textures->floor_tex)
+	{
+		dest = &textures->floor_tex;
+		path = ft_strtrim(trimmed + 3);
+	}
+	else if (strncmp(trimmed, "CT ", 3) == 0 && !textures->ceiling_tex)
+	{
+		dest = &textures->ceiling_tex;
+		path = ft_strtrim(trimmed + 3);
+	}
+	else
+	{
+		free(trimmed);
+		return (0);
+	}
+	free(trimmed);
+	if (!path || strlen(path) == 0)
+	{
+		if (path)
+			free(path);
+		return (0);
+	}
+	*dest = path;
+	return (1);
+}

@@ -4,9 +4,9 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 
 # Directories
-SRC_DIR = src
+SRC_DIR = source/src
 OBJ_DIR = obj
-INC_DIR = includes
+INC_DIR = source/includes
 MLX_DIR = minilibx-linux
 
 # MiniLibX
@@ -30,9 +30,12 @@ SRC += $(SRC_DIR)/parsing/parser.c \
 
 # Rendering module
 SRC += $(SRC_DIR)/rendering/render.c \
-	   $(SRC_DIR)/rendering/minimap.c \
 	   $(SRC_DIR)/rendering/raycast.c \
-	   $(SRC_DIR)/rendering/movement.c
+	   $(SRC_DIR)/rendering/lighting.c \
+	   $(SRC_DIR)/rendering/performance.c \
+	   $(SRC_DIR)/rendering/smooth_render.c \
+	   $(SRC_DIR)/rendering/movement.c \
+	   $(SRC_DIR)/rendering/minimap.c
 
 # Object files (in obj/ directory)
 OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))

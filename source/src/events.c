@@ -22,9 +22,27 @@ int	handle_keypress(int keycode, t_data *data)
 	else if (keycode == KEY_D)
 		strafe_right(data);
 	else if (keycode == KEY_LEFT)
-		rotate_right(data);
-	else if (keycode == KEY_RIGHT)
 		rotate_left(data);
+	else if (keycode == KEY_RIGHT)
+		rotate_right(data);
+	else if (keycode == KEY_T)
+	{
+		data->texture_mode = !data->texture_mode;
+		if (data->texture_mode)
+			printf("Switched to TEXTURE mode\n");
+		else
+			printf("Switched to COLOR mode\n");
+		request_redraw();
+	}
+	else if (keycode == KEY_L)
+	{
+		data->torch_mode = !data->torch_mode;
+		if (data->torch_mode)
+			printf("Torch mode ENABLED\n");
+		else
+			printf("Torch mode DISABLED\n");
+		request_redraw();
+	}
 
 	return (0);
 }

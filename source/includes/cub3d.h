@@ -1,7 +1,7 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../minilibx-linux/mlx.h"
+# include "../../minilibx-linux/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -15,7 +15,7 @@
    ======================================== */
 
 // Window settings
-# define WIN_WIDTH 3840
+# define WIN_WIDTH 3480
 # define WIN_HEIGHT 2160
 # define WIN_TITLE "Cub3D"
 
@@ -27,6 +27,8 @@
 # define KEY_D 100
 # define KEY_LEFT 65361
 # define KEY_RIGHT 65363
+# define KEY_T 116
+# define KEY_L 108
 
 // Event codes
 # define EVENT_KEY_PRESS 2
@@ -56,10 +58,14 @@ typedef struct s_textures
 	char	*south;
 	char	*west;
 	char	*east;
+	char	*floor_tex;
+	char	*ceiling_tex;
 	t_img	north_img;
 	t_img	south_img;
 	t_img	west_img;
 	t_img	east_img;
+	t_img	floor_img;
+	t_img	ceiling_img;
 }	t_textures;
 
 // RGB color
@@ -87,6 +93,7 @@ typedef struct s_map
 	char	**grid;		// 2D array
 	int		width;
 	int		height;
+	char	*first_line;	// First map line (saved during config parsing)
 }	t_map;
 
 // Main game structure
@@ -98,6 +105,10 @@ typedef struct s_data
 	t_textures	textures;	// Wall textures
 	t_color		floor;		// Floor color
 	t_color		ceiling;	// Ceiling color
+	int			use_floor_texture;	// 1 = use texture, 0 = use color
+	int			use_ceiling_texture;	// 1 = use texture, 0 = use color
+	int			texture_mode;	// Toggle flag (1 = textures, 0 = colors)
+	int			torch_mode;		// Toggle flag (1 = torch on, 0 = torch off)
 	t_map		map;		// Game map
 	t_player	player;		// Player info
 }	t_data;
@@ -123,8 +134,5 @@ void	error_exit(char *message);
 void	draw_background(t_data *data);
 void	draw_minimap(t_data *data);
 void	debug_print_config(t_data *data);
-
-void	put_pixel_to_img(t_img *img, int x, int y, int color);
-int	get_texture_pixel(t_img *texture, int x, int y);
 
 #endif

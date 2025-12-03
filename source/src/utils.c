@@ -15,6 +15,8 @@ void	print_controls(void)
 	printf("║  A           - Strafe left         ║\n");
 	printf("║  D           - Strafe right        ║\n");
 	printf("║  ← / →       - Rotate view         ║\n");
+	printf("║  T           - Toggle texture mode ║\n");
+	printf("║  L           - Toggle torch mode     ║\n");
 	printf("║  Red X       - Close window        ║\n");
 	printf("╚════════════════════════════════════╝\n");
 	printf("\n");

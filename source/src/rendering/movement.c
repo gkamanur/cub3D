@@ -35,7 +35,7 @@ void	move_forward(t_data *data)
 	if (is_valid_position(data, data->player.x, new_y))
 		data->player.y = new_y;
 	// Re-render frame
-	render_frame(data);
+	request_redraw();
 }
 
 // Move backward (S key)
@@ -50,7 +50,7 @@ void	move_backward(t_data *data)
 		data->player.x = new_x;
 	if (is_valid_position(data, data->player.x, new_y))
 		data->player.y = new_y;
-	render_frame(data);
+	request_redraw();
 }
 
 // Strafe left (A key)
@@ -66,7 +66,7 @@ void	strafe_left(t_data *data)
 		data->player.x = new_x;
 	if (is_valid_position(data, data->player.x, new_y))
 		data->player.y = new_y;
-	render_frame(data);
+	request_redraw();
 }
 
 // Strafe right (D key)
@@ -81,11 +81,11 @@ void	strafe_right(t_data *data)
 		data->player.x = new_x;
 	if (is_valid_position(data, data->player.x, new_y))
 		data->player.y = new_y;
-	render_frame(data);
+	request_redraw();
 }
 
 // Rotate left (← key) - counterclockwise
-void	rotate_left(t_data *data)
+void	rotate_right(t_data *data)
 {
 	double	old_dir_x;
 	double	old_plane_x;
@@ -102,11 +102,11 @@ void	rotate_left(t_data *data)
 	old_plane_x = data->player.plane_x;
 	data->player.plane_x = data->player.plane_x * cos_rot - data->player.plane_y * sin_rot;
 	data->player.plane_y = old_plane_x * sin_rot + data->player.plane_y * cos_rot;
-	render_frame(data);
+	request_redraw();
 }
 
 // Rotate right (→ key) - clockwise
-void	rotate_right(t_data *data)
+void	rotate_left(t_data *data)
 {
 	double	old_dir_x;
 	double	old_plane_x;
@@ -123,5 +123,5 @@ void	rotate_right(t_data *data)
 	old_plane_x = data->player.plane_x;
 	data->player.plane_x = data->player.plane_x * cos_rot - data->player.plane_y * sin_rot;
 	data->player.plane_y = old_plane_x * sin_rot + data->player.plane_y * cos_rot;
-	render_frame(data);
+	request_redraw();
 }

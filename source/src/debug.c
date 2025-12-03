@@ -1,4 +1,6 @@
 #include "../includes/cub3d.h"
+#include "../includes/rendering.h"
+
 
 // Print parsed configuration to console for verification
 void	debug_print_config(t_data *data)

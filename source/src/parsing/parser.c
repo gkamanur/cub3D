@@ -9,15 +9,22 @@ static void	init_data(t_data *data)
 	data->textures.south = NULL;
 	data->textures.west = NULL;
 	data->textures.east = NULL;
+	data->textures.floor_tex = NULL;
+	data->textures.ceiling_tex = NULL;
 	data->floor.r = -1;
 	data->floor.g = -1;
 	data->floor.b = -1;
 	data->ceiling.r = -1;
 	data->ceiling.g = -1;
 	data->ceiling.b = -1;
+	data->use_floor_texture = 0;
+	data->use_ceiling_texture = 0;
+	data->texture_mode = 1;
+	data->torch_mode = 0;
 	data->map.grid = NULL;
 	data->map.width = 0;
 	data->map.height = 0;
+	data->map.first_line = NULL;
 	data->player.x = 0;
 	data->player.y = 0;
 	data->player.dir_x = 0;
@@ -26,7 +33,7 @@ static void	init_data(t_data *data)
 	data->player.plane_y = 0;
 }
 
-// Check if all config elements have been parsed
+// Check if required config is complete
 static int	config_complete(t_data *data)
 {
 	return (data->textures.north != NULL &&
@@ -64,14 +71,25 @@ static int	parse_config(int fd, t_data *data)
 		if (strncmp(trimmed, "NO ", 3) == 0 || strncmp(trimmed, "SO ", 3) == 0 ||
 			strncmp(trimmed, "WE ", 3) == 0 || strncmp(trimmed, "EA ", 3) == 0)
 			result = parse_texture(trimmed, &data->textures);
+		else if (strncmp(trimmed, "FT ", 3) == 0 || strncmp(trimmed, "CT ", 3) == 0)
+			result = parse_cf_texture(trimmed, &data->textures);
 		else if (strncmp(trimmed, "F ", 2) == 0 || strncmp(trimmed, "C ", 2) == 0)
 			result = parse_color(trimmed, &data->floor, &data->ceiling);
+		else if (config_complete(data))
+		{
+			// Config is complete and this is not a config line - start of map
+			// Save this line for parse_map
+			data->map.first_line = line;
+			free(trimmed);
+			break;
+		}
 		else
 		{
-			// Not a config line, might be start of map
+			// Unknown line and config not complete
+			printf("Error\nInvalid config line: %s\n", trimmed);
 			free(trimmed);
 			free(line);
-			break;
+			return (0);
 		}
 		free(trimmed);
 		free(line);
@@ -80,9 +98,6 @@ static int	parse_config(int fd, t_data *data)
 			printf("Error\nInvalid or duplicate config line\n");
 			return (0);
 		}
-		// Check if config is complete
-		if (config_complete(data))
-			break;
 	}
 	return (1);
 }
