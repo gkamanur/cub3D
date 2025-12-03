@@ -1,6 +1,5 @@
 #include "../../includes/parsing.h"
 
-// Initialize player direction vectors based on starting orientation
 void	init_player_direction(t_player *player, char direction)
 {
 	if (direction == 'N')

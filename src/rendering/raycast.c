@@ -1,185 +1,272 @@
-#include "../../includes/rendering.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycast.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/03 13:52:27 by gkamanur          #+#    #+#             */
+/*   Updated: 2025/12/03 14:23:28 by gkamanur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// DDA raycasting for one vertical slice
-static void	cast_ray(t_data *data, int x)
+#include "cub3d.h"
+
+typedef struct s_ray
 {
-	double	camera_x;
-	double	ray_dir_x;
-	double	ray_dir_y;
-	int		map_x;
-	int		map_y;
-	double	side_dist_x;
-	double	side_dist_y;
-	double	delta_dist_x;
-	double	delta_dist_y;
-	double	perp_wall_dist;
-	int		step_x;
-	int		step_y;
-	int		hit;
-	int		side;
+	double		camera_x;
+	double		ray_dir_x;
+	double		ray_dir_y;
+	int			map_x;
+	int			map_y;
+	double		side_dist_x;
+	double		side_dist_y;
+	double		delta_dist_x;
+	double		delta_dist_y;
+	double		perp_wall_dist;
+	int			step_x;
+	int			step_y;
+	int			hit;
+	int			side;
+}				t_ray;
 
-	// Calculate ray position and direction
-	camera_x = 2 * x / (double)WIN_WIDTH - 1; // x-coordinate in camera space
-	ray_dir_x = data->player.dir_x + data->player.plane_x * camera_x;
-	ray_dir_y = data->player.dir_y + data->player.plane_y * camera_x;
+typedef struct s_draw_info
+{
+	int			line_height;
+	int			draw_start;
+	int			draw_end;
+	double		wall_x;
+	int			tex_x;
+	double		step;
+	double		tex_pos;
+}				t_draw_info;
+
+
+int	create_trgb(int t, int r, int g, int b)
+{
+	return (t << 24 | r << 16 | g << 8 | b);
+}
+
+static void	init_ray_values(t_data *data, int x, t_ray *ray)
+{
+	ray->camera_x = 2 * x / (double)WIN_WIDTH - 1;
+	ray->ray_dir_x = data->player.dir_x + data->player.plane_x * ray->camera_x;
+	ray->ray_dir_y = data->player.dir_y + data->player.plane_y * ray->camera_x;
+	ray->map_x = (int)data->player.x;
+	ray->map_y = (int)data->player.y;
 	
-	// Which box of the map we're in
-	map_x = (int)data->player.x;
-	map_y = (int)data->player.y;
+	// FIXED: Prevent division by zero
+	if (ray->ray_dir_x == 0)
+		ray->delta_dist_x = 1e30;
+	else
+		ray->delta_dist_x = fabs(1 / ray->ray_dir_x);
+	if (ray->ray_dir_y == 0)
+		ray->delta_dist_y = 1e30;
+	else
+		ray->delta_dist_y = fabs(1 / ray->ray_dir_y);
 	
-	// Length of ray from one x or y-side to next x or y-side
-	delta_dist_x = (ray_dir_x == 0) ? 1e30 : fabs(1 / ray_dir_x);
-	delta_dist_y = (ray_dir_y == 0) ? 1e30 : fabs(1 / ray_dir_y);
-	
-	// Calculate step and initial sideDist
-	if (ray_dir_x < 0)
+	ray->hit = 0;
+}
+
+static void	calculate_step_and_side_dist(t_data *data, t_ray *ray)
+{
+	if (ray->ray_dir_x < 0)
 	{
-		step_x = -1;
-		side_dist_x = (data->player.x - map_x) * delta_dist_x;
+		ray->step_x = -1;
+		ray->side_dist_x = (data->player.x - ray->map_x) * ray->delta_dist_x;
 	}
 	else
 	{
-		step_x = 1;
-		side_dist_x = (map_x + 1.0 - data->player.x) * delta_dist_x;
+		ray->step_x = 1;
+		ray->side_dist_x = (ray->map_x + 1.0 - data->player.x)
+			* ray->delta_dist_x;
 	}
-	if (ray_dir_y < 0)
+	if (ray->ray_dir_y < 0)
 	{
-		step_y = -1;
-		side_dist_y = (data->player.y - map_y) * delta_dist_y;
+		ray->step_y = -1;
+		ray->side_dist_y = (data->player.y - ray->map_y) * ray->delta_dist_y;
 	}
 	else
 	{
-		step_y = 1;
-		side_dist_y = (map_y + 1.0 - data->player.y) * delta_dist_y;
+		ray->step_y = 1;
+		ray->side_dist_y = (ray->map_y + 1.0 - data->player.y)
+			* ray->delta_dist_y;
 	}
-	
-	// Perform DDA
-	hit = 0;
-	while (hit == 0)
+}
+
+static void	perform_dda(t_data *data, t_ray *ray)
+{
+	while (ray->hit == 0)
 	{
-		// Jump to next map square, either in x-direction, or in y-direction
-		if (side_dist_x < side_dist_y)
+		if (ray->side_dist_x < ray->side_dist_y)
 		{
-			side_dist_x += delta_dist_x;
-			map_x += step_x;
-			side = 0; // x-side hit
+			ray->side_dist_x += ray->delta_dist_x;
+			ray->map_x += ray->step_x;
+			ray->side = 0;
 		}
 		else
 		{
-			side_dist_y += delta_dist_y;
-			map_y += step_y;
-			side = 1; // y-side hit
+			ray->side_dist_y += ray->delta_dist_y;
+			ray->map_y += ray->step_y;
+			ray->side = 1;
 		}
-		// Check if ray has hit a wall
-		if (map_x < 0 || map_x >= data->map.width || 
-			map_y < 0 || map_y >= data->map.height ||
-			data->map.grid[map_y][map_x] == '1')
-			hit = 1;
+		if (ray->map_x < 0 || ray->map_x >= data->map.width
+			|| ray->map_y < 0 || ray->map_y >= data->map.height
+			|| data->map.grid[ray->map_y][ray->map_x] == '1')
+			ray->hit = 1;
 	}
-	
-	// Calculate distance projected on camera direction (Euclidean distance gives fisheye effect!)
-	if (side == 0)
-		perp_wall_dist = (map_x - data->player.x + (1 - step_x) / 2) / ray_dir_x;
-	else
-		perp_wall_dist = (map_y - data->player.y + (1 - step_y) / 2) / ray_dir_y;
-	
-	// Calculate height of line to draw on screen
-	int	line_height = (int)(WIN_HEIGHT / perp_wall_dist);
-	
-	// Calculate lowest and highest pixel to fill in current stripe
-	int	draw_start = -line_height / 2 + WIN_HEIGHT / 2;
-	if (draw_start < 0)
-		draw_start = 0;
-	int	draw_end = line_height / 2 + WIN_HEIGHT / 2;
-	if (draw_end >= WIN_HEIGHT)
-		draw_end = WIN_HEIGHT - 1;
-	
-	// Calculate wall x coordinate (where exactly the wall was hit)
-	double	wall_x;
-	if (side == 0)
-		wall_x = data->player.y + perp_wall_dist * ray_dir_y;
-	else
-		wall_x = data->player.x + perp_wall_dist * ray_dir_x;
-	wall_x -= floor(wall_x);
-	
-	// x coordinate on the texture (0-63 for 64x64 texture)
-	int	tex_x = (int)(wall_x * 64.0);
-	if ((side == 0 && ray_dir_x > 0) || (side == 1 && ray_dir_y < 0))
-		tex_x = 64 - tex_x - 1;
-	
-	// Choose texture based on wall direction
-	t_img	*texture;
-	if (side == 0)
+}
+
+static void	calculate_wall_distance(t_data *data, t_ray *ray)
+{
+	if (ray->side == 0)
 	{
-		if (ray_dir_x > 0)
-			texture = &data->textures.west_img;  // West side
+		ray->perp_wall_dist = (ray->map_x - data->player.x
+				+ (1 - ray->step_x) / 2) / ray->ray_dir_x;
+	}
+	else
+	{
+		ray->perp_wall_dist = (ray->map_y - data->player.y
+				+ (1 - ray->step_y) / 2) / ray->ray_dir_y;
+	}
+	// FIXED: Prevent negative or zero distance
+	if (ray->perp_wall_dist <= 0)
+		ray->perp_wall_dist = 0.0001;
+}
+
+static void	init_draw_info(t_data *data, t_ray *ray, t_draw_info *draw)
+{
+	draw->line_height = (int)(WIN_HEIGHT / ray->perp_wall_dist);
+	draw->draw_start = -draw->line_height / 2 + WIN_HEIGHT / 2;
+	if (draw->draw_start < 0)
+		draw->draw_start = 0;
+	draw->draw_end = draw->line_height / 2 + WIN_HEIGHT / 2;
+	if (draw->draw_end >= WIN_HEIGHT)
+		draw->draw_end = WIN_HEIGHT - 1;
+	if (ray->side == 0)
+		draw->wall_x = data->player.y + ray->perp_wall_dist * ray->ray_dir_y;
+	else
+		draw->wall_x = data->player.x + ray->perp_wall_dist * ray->ray_dir_x;
+	draw->wall_x -= floor(draw->wall_x);
+}
+
+static t_img	*get_wall_texture(t_data *data, t_ray *ray)
+{
+	if (ray->side == 0)
+	{
+		if (ray->ray_dir_x > 0)
+			return (&data->textures.east_img);
 		else
-			texture = &data->textures.east_img;  // East side
+			return (&data->textures.west_img);
 	}
 	else
 	{
-		if (ray_dir_y > 0)
-			texture = &data->textures.north_img; // North side
+		if (ray->ray_dir_y > 0)
+			return (&data->textures.south_img);
 		else
-			texture = &data->textures.south_img; // South side
+			return (&data->textures.north_img);
 	}
-	
-	// How much to increase the texture coordinate per screen pixel
-	double	step = 64.0 / line_height;
-	// Starting texture coordinate
-	double	tex_pos = (draw_start - WIN_HEIGHT / 2 + line_height / 2) * step;
-	
-	// Draw the textured vertical line
-	int	y = draw_start;
-	while (y < draw_end)
+}
+
+static void	calculate_texture_x(t_img *texture, t_ray *ray,
+								t_draw_info *draw)
+{
+	draw->tex_x = (int)(draw->wall_x * (double)texture->width);
+	if ((ray->side == 0 && ray->ray_dir_x > 0)
+		|| (ray->side == 1 && ray->ray_dir_y < 0))
+		draw->tex_x = texture->width - draw->tex_x - 1;
+	if (draw->tex_x < 0)
+		draw->tex_x = 0;
+	else if (draw->tex_x >= texture->width)
+		draw->tex_x = texture->width - 1;
+}
+
+static void	draw_textured_column(t_data *data, int x, t_draw_info *draw,
+									t_img *texture)
+{
+	int	y;
+	int	tex_y;
+	int	color;
+
+	y = draw->draw_start;
+	while (y < draw->draw_end)
 	{
-		int tex_y = (int)tex_pos & 63;  // Modulo 64 (texture height)
-		tex_pos += step;
-		int color = get_texture_pixel(texture, tex_x, tex_y);
+		tex_y = (int)draw->tex_pos;
+		if (tex_y < 0)
+			tex_y = 0;
+		else if (tex_y >= texture->height)
+			tex_y = texture->height - 1;
+		draw->tex_pos += draw->step;
+		color = get_texture_pixel(texture, draw->tex_x, tex_y);
 		put_pixel_to_img(&data->img, x, y, color);
 		y++;
 	}
 }
 
-// Main raycasting function - casts rays for all screen columns
+static void	cast_single_ray(t_data *data, int x)
+{
+	t_ray		ray;
+	t_draw_info	draw;
+	t_img		*texture;
+
+	init_ray_values(data, x, &ray);
+	calculate_step_and_side_dist(data, &ray);
+	perform_dda(data, &ray);
+	calculate_wall_distance(data, &ray);
+	init_draw_info(data, &ray, &draw);
+	texture = get_wall_texture(data, &ray);
+	calculate_texture_x(texture, &ray, &draw);
+	draw.step = (double)texture->height / draw.line_height;
+	draw.tex_pos = (draw.draw_start - WIN_HEIGHT / 2
+			+ draw.line_height / 2) * draw.step;
+	draw_textured_column(data, x, &draw, texture);
+}
+
+static void	draw_floor_ceiling(t_data *data)
+{
+	int	x;
+	int	y;
+	int	floor_color;
+	int	ceiling_color;
+
+	floor_color = create_trgb(0, data->floor.r, data->floor.g, data->floor.b);
+	ceiling_color = create_trgb(0, data->ceiling.r, 
+			data->ceiling.g, data->ceiling.b);
+	
+	y = 0;
+	while (y < WIN_HEIGHT / 2)
+	{
+		x = 0;
+		while (x < WIN_WIDTH)
+		{
+			put_pixel_to_img(&data->img, x, y, ceiling_color);
+			x++;
+		}
+		y++;
+	}
+	
+	y = WIN_HEIGHT / 2;
+	while (y < WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < WIN_WIDTH)
+		{
+			put_pixel_to_img(&data->img, x, y, floor_color);
+			x++;
+		}
+		y++;
+	}
+}
+
 void	raycast(t_data *data)
 {
-	int		x;
-	int		step;
-	int		bytes_per_pixel;
-
-	// Adaptive quality: more aggressive at higher resolutions
-	if (WIN_WIDTH >= 2000)
-		step = 3;  // Cast every 3rd ray - good quality at high res
-	else if (WIN_WIDTH > 1600)
-		step = 2;  // Cast every 2nd ray
-	else
-		step = 1;  // Full quality
-
-	bytes_per_pixel = data->img.bits_per_pixel / 8;
+	int	x;
+    
+	draw_floor_ceiling(data);
 	x = 0;
 	while (x < WIN_WIDTH)
 	{
-		cast_ray(data, x);
-		
-		// Fast column duplication using direct memory copy
-		if (step > 1)
-		{
-			int dup;
-			for (dup = 1; dup < step && (x + dup) < WIN_WIDTH; dup++)
-			{
-				int y;
-				char *src_col = data->img.addr + (x * bytes_per_pixel);
-				char *dst_col = data->img.addr + ((x + dup) * bytes_per_pixel);
-				
-				// Copy entire column at once (much faster!)
-				for (y = 0; y < WIN_HEIGHT; y++)
-				{
-					*(unsigned int *)(dst_col + y * data->img.line_length) = 
-					*(unsigned int *)(src_col + y * data->img.line_length);
-				}
-			}
-		}
-		x += step;
+		cast_single_ray(data, x);
+		x++;
 	}
 }

@@ -15,8 +15,8 @@
    ======================================== */
 
 // Window settings
-# define WIN_WIDTH 2000
-# define WIN_HEIGHT 2200
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
 # define WIN_TITLE "Cub3D"
 
 // Key codes (Linux)
@@ -45,6 +45,8 @@ typedef struct s_img
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		width;			// Texture width
+	int		height;			// Texture height
 }	t_img;
 
 // Texture paths
@@ -121,5 +123,8 @@ void	error_exit(char *message);
 void	draw_background(t_data *data);
 void	draw_minimap(t_data *data);
 void	debug_print_config(t_data *data);
+
+void	put_pixel_to_img(t_img *img, int x, int y, int color);
+int	get_texture_pixel(t_img *texture, int x, int y);
 
 #endif

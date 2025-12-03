@@ -20,7 +20,7 @@ int	main(int argc, char **argv)
 		return (1);
 	// Print parsed config for verification
 	debug_print_config(&data);
-	// Initialize window
+	//Initialize window
 	if (init_window(&data) != 0)
 		return (1);
 	// Initialize image buffer
@@ -31,11 +31,14 @@ int	main(int argc, char **argv)
 		return (1);
 	// Print controls
 	print_controls();
-	// Render initial frame
+	
+	// Debug: draw minimap with parsed map
+
+	//Render initial frame
 	printf("Rendering first frame...\n");
 	render_frame(&data);
 	printf("✓ Initial render complete\n");
-	// Setup event handlers
+	//Setup event handlers
 	setup_hooks(&data);
 	// Start event loop (blocks until window is closed)
 	printf("Entering main loop...\n");

@@ -23,24 +23,38 @@ int	init_image(t_data *data)
 }
 
 // Load a single texture from XPM file
-static int	load_texture(t_data *data, t_img *tex, char *path)
-{
-	int	width;
-	int	height;
+// static int	load_texture(t_data *data, t_img *tex, char *path)
+// {
+// 	int	width;
+// 	int	height;
 
-	tex->img_ptr = mlx_xpm_file_to_image(data->mlx_ptr, path, &width, &height);
-	if (!tex->img_ptr)
-	{
-		printf("Error\nFailed to load texture: %s\n", path);
+// 	tex->img_ptr = mlx_xpm_file_to_image(data->mlx_ptr, path, &width, &height);
+// 	if (!tex->img_ptr)
+// 	{
+// 		printf("Error\nFailed to load texture: %s\n", path);
+// 		return (0);
+// 	}
+// 	tex->addr = mlx_get_data_addr(tex->img_ptr, &tex->bits_per_pixel,
+// 								  &tex->line_length, &tex->endian);
+// 	if (!tex->addr)
+// 	{
+// 		printf("Error\nFailed to get texture data\n");
+// 		return (0);
+// 	}
+// 	tex->width = width;
+// 	tex->height = height;
+// 	return (1);
+// }
+
+int	load_texture(t_data *data, t_img *texture_img, char *path)
+{
+	texture_img->img_ptr = mlx_xpm_file_to_image(data->mlx_ptr, path,
+			&texture_img->width, &texture_img->height);
+	if (!texture_img->img_ptr)
 		return (0);
-	}
-	tex->addr = mlx_get_data_addr(tex->img_ptr, &tex->bits_per_pixel,
-								  &tex->line_length, &tex->endian);
-	if (!tex->addr)
-	{
-		printf("Error\nFailed to get texture data\n");
-		return (0);
-	}
+	texture_img->addr = mlx_get_data_addr(texture_img->img_ptr,
+			&texture_img->bits_per_pixel, &texture_img->line_length,
+			&texture_img->endian);
 	return (1);
 }
 
@@ -131,6 +145,7 @@ void	render_frame(t_data *data)
 	render_background(data);
 	// Perform raycasting to draw walls
 	raycast(data);
+	draw_minimap(data);
 	// Display the rendered frame
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.img_ptr, 0, 0);
 }

@@ -7,8 +7,6 @@
  */
 int	handle_keypress(int keycode, t_data *data)
 {
-	printf("Key pressed: %d\n", keycode);
-
 	if (keycode == KEY_ESC)
 	{
 		printf("ESC pressed - Closing...\n");
@@ -24,9 +22,9 @@ int	handle_keypress(int keycode, t_data *data)
 	else if (keycode == KEY_D)
 		strafe_right(data);
 	else if (keycode == KEY_LEFT)
-		rotate_left(data);
-	else if (keycode == KEY_RIGHT)
 		rotate_right(data);
+	else if (keycode == KEY_RIGHT)
+		rotate_left(data);
 
 	return (0);
 }
