@@ -1,7 +1,7 @@
 NAME = cub3D
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -O3 -march=native
+CFLAGS = -Wall -Wextra -Werror -g
 
 # Directories
 SRC_DIR = src
@@ -30,6 +30,7 @@ SRC += $(SRC_DIR)/parsing/parser.c \
 
 # Rendering module
 SRC += $(SRC_DIR)/rendering/render.c \
+	   $(SRC_DIR)/rendering/minimap.c \
 	   $(SRC_DIR)/rendering/raycast.c \
 	   $(SRC_DIR)/rendering/movement.c
 
