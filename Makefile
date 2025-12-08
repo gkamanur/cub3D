@@ -8,25 +8,42 @@ SRC_DIR = source/src
 OBJ_DIR = obj
 INC_DIR = source/includes
 MLX_DIR = minilibx-linux
+LIBFT_DIR = libft
 
 # MiniLibX
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
+# Libft
+LIBFT_LIB = $(LIBFT_DIR)/libft.a
+LIBFT_FLAGS = -L$(LIBFT_DIR) -lft
+
 # Source files
 # Core
 SRC = $(SRC_DIR)/main.c \
-	  $(SRC_DIR)/window.c \
-	  $(SRC_DIR)/events.c \
-	  $(SRC_DIR)/utils.c \
-	  $(SRC_DIR)/debug.c
+
+SRC += $(SRC_DIR)/events/window.c \
+	   $(SRC_DIR)/events/events.c \
+	   $(SRC_DIR)/events/utils.c \
+	   $(SRC_DIR)/events/debug.c \
+
 
 # Parsing module
-SRC += $(SRC_DIR)/parsing/parser.c \
-	   $(SRC_DIR)/parsing/parser_utils.c \
-	   $(SRC_DIR)/parsing/parser_config.c \
-	   $(SRC_DIR)/parsing/parser_map.c \
-	   $(SRC_DIR)/parsing/parser_validate.c
+# SRC += $(SRC_DIR)/parsing/parser_cub.c \
+#        $(SRC_DIR)/parsing/floor_ceiling/f_c.c \
+# 	   $(SRC_DIR)/parsing/floor_ceiling/colors.c \
+# 	   $(SRC_DIR)/parsing/init_data.c \
+# 	   $(SRC_DIR)/parsing/parser_utils.c \
+# 	   $(SRC_DIR)/parsing/parse_walls.c \
+# 	   $(SRC_DIR)/parsing/parse_config.c \
+# 	   $(SRC_DIR)/parsing/parser_map.c \
+# 	   $(SRC_DIR)/parsing/validation/parser_validate.c \
+# 	   $(SRC_DIR)/parsing/validation/validate_map.c \
+# 	   $(SRC_DIR)/parsing/gnl.c \
+# 	   $(SRC_DIR)/parsing/parse_rgb.c \
+
+SRC += $(wildcard $(SRC_DIR)/parsing/*/*.c)
+
 
 # Rendering module
 SRC += $(SRC_DIR)/rendering/render.c \
@@ -35,7 +52,7 @@ SRC += $(SRC_DIR)/rendering/render.c \
 	   $(SRC_DIR)/rendering/performance.c \
 	   $(SRC_DIR)/rendering/smooth_render.c \
 	   $(SRC_DIR)/rendering/movement.c \
-	   $(SRC_DIR)/rendering/minimap.c
+	   $(SRC_DIR)/rendering/minimap.c \
 
 # Object files (in obj/ directory)
 OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
@@ -47,12 +64,17 @@ RED = \033[0;31m
 BLUE = \033[0;34m
 NC = \033[0m # No Color
 
-all: $(MLX_LIB) $(NAME)
+all: $(NAME)
 
 $(MLX_LIB):
 	@echo "$(YELLOW)Compiling MiniLibX...$(NC)"
-	@make -C $(MLX_DIR) > /dev/null 2>&1
+	@make -C $(MLX_DIR) > /dev/null 2>&1 || true
 	@echo "$(GREEN)✓ MiniLibX compiled$(NC)"
+
+$(LIBFT_LIB):
+	@echo "$(YELLOW)Compiling libft...$(NC)"
+	@make -C $(LIBFT_DIR) > /dev/null 2>&1 || true
+	@echo "$(GREEN)✓ libft compiled$(NC)"
 
 # Create obj directory and subdirectories if they don't exist
 $(OBJ_DIR):
@@ -61,42 +83,51 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/rendering
 	@echo "$(BLUE)✓ Created $(OBJ_DIR) directory structure$(NC)"
 
-$(NAME): $(OBJ_DIR) $(OBJ)
+$(NAME): $(MLX_LIB) $(LIBFT_LIB) $(OBJ_DIR) $(OBJ)
 	@echo "$(YELLOW)Linking $(NAME)...$(NC)"
-	@$(CC) $(OBJ) $(MLX_FLAGS) -o $(NAME)
+	@$(CC) $(OBJ) $(MLX_FLAGS) $(LIBFT_FLAGS) -o $(NAME)
 	@echo "$(GREEN)✓ $(NAME) created successfully!$(NC)"
 
 # Compilation rule: src/file.c -> obj/file.o
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@echo "$(YELLOW)Compiling $<...$(NC)"
-	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
-
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -I$(INC_DIR) -I$(MLX_DIR) -I$(LIBFT_DIR) -c $< -o $@
+	
 clean:
 	@echo "$(RED)Cleaning object files...$(NC)"
 	@rm -rf $(OBJ_DIR)
-	@make -C $(MLX_DIR) clean > /dev/null 2>&1
+	@make -C $(MLX_DIR) clean > /dev/null 2>&1 || true
+	@make -C $(LIBFT_DIR) clean > /dev/null 2>&1 || true
 	@echo "$(GREEN)✓ Clean done$(NC)"
 
 fclean: clean
 	@echo "$(RED)Removing $(NAME)...$(NC)"
 	@rm -f $(NAME)
+	@make -C $(LIBFT_DIR) fclean > /dev/null 2>&1 || true
 	@echo "$(GREEN)✓ Full clean done$(NC)"
 
 re: fclean all
 
 run: all
 	@echo "$(GREEN)Running $(NAME)...$(NC)"
-	@./$(NAME)
+	@./$(NAME) maps/map.cub
+
+valgrind: all
+	@echo "$(GREEN)Running $(NAME) with valgrind...$(NC)"
+	@valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) maps/map.cub
 
 # Debug: show variables
 debug:
 	@echo "$(BLUE)===== Makefile Debug Info =====$(NC)"
 	@echo "$(YELLOW)NAME:$(NC) $(NAME)"
+	@echo "$(YELLOW)CC:$(NC) $(CC)"
+	@echo "$(YELLOW)CFLAGS:$(NC) $(CFLAGS)"
 	@echo "$(YELLOW)SRC_DIR:$(NC) $(SRC_DIR)"
 	@echo "$(YELLOW)OBJ_DIR:$(NC) $(OBJ_DIR)"
-	@echo "$(YELLOW)Sources:$(NC)"
-	@echo "$(SRC)" | tr ' ' '\n'
-	@echo "$(YELLOW)Objects:$(NC)"
-	@echo "$(OBJ)" | tr ' ' '\n'
+	@echo "$(YELLOW)INC_DIR:$(NC) $(INC_DIR)"
+	@echo "$(YELLOW)MLX_DIR:$(NC) $(MLX_DIR)"
+	@echo "$(YELLOW)LIBFT_DIR:$(NC) $(LIBFT_DIR)"
+	@echo "$(YELLOW)Number of source files:$(NC) $(words $(SRC))"
+	@echo "$(YELLOW)Number of object files:$(NC) $(words $(OBJ))"
 
-.PHONY: all clean fclean re run debug
+.PHONY: all clean fclean re run valgrind debug

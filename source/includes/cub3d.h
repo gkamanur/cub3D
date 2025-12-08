@@ -2,6 +2,7 @@
 # define CUB3D_H
 
 # include "../../minilibx-linux/mlx.h"
+# include "../../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -9,7 +10,9 @@
 # include <string.h>
 # include <math.h>
 # include <stdbool.h>
-
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 4096
+#endif
 /* ========================================
    DEFINES
    ======================================== */
