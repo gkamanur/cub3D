@@ -39,7 +39,7 @@ int	validate_textures(t_textures *textures)
 		return (0);
 	return (1);
 }
-// Validate floor and ceiling colors
+
 int	validate_colors(t_color *floor, t_color *ceiling)
 {
 	if (floor->r == -1 || floor->g == -1 || floor->b == -1)
@@ -54,38 +54,3 @@ int	validate_colors(t_color *floor, t_color *ceiling)
 	}
 	return (1);
 }
-
-// Check if map borders are all walls
-int	check_borders(char **grid, int width, int height)
-{
-	int	x;
-	int	y;
-
-	// Check top and bottom
-	x = 0;
-	while (x < width)
-	{
-		if (grid[0][x] != '1' && grid[0][x] != ' ')
-			return (0);
-		if (grid[height - 1][x] != '1' && grid[height - 1][x] != ' ')
-			return (0);
-		x++;
-	}
-	// Check left and right
-	y = 0;
-	while (y < height)
-	{
-		if (grid[y][0] != '1' && grid[y][0] != ' ')
-			return (0);
-		if (grid[y][width - 1] != '1' && grid[y][width - 1] != ' ')
-			return (0);
-		y++;
-	}
-	return (1);
-}
-
-
-
-
-
-

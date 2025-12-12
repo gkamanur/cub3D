@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/11 16:26:48 by gkamanur          #+#    #+#             */
+/*   Updated: 2025/12/12 14:35:55 by gkamanur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 #include "../includes/parsing.h"
 #include "../includes/rendering.h"
@@ -20,7 +32,7 @@ int	main(int argc, char **argv)
 		return (1);
 	// Print parsed config for verification
 	debug_print_config(&data);
-	// Initialize window
+	//Initialize window
 	if (init_window(&data) != 0)
 		return (1);
 	// Initialize image buffer

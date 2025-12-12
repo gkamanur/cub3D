@@ -6,14 +6,13 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 15:01:44 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/08 15:07:37 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/12 14:32:40 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/parsing.h"
 
-void	set_player_position(t_player *player, int x, int y, char c,
-		char *dir)
+void	set_player_position(t_player *player, int x, int y, char c, char *dir)
 {
 	player->x = x + 0.5;
 	player->y = y + 0.5;
@@ -66,8 +65,8 @@ int	validate_player_count(int player_count)
 
 int	validate_map(t_map *map, t_player *player)
 {
-	char player_dir;
-	int player_count;
+	char	player_dir;
+	int		player_count;
 
 	if (!check_map_empty(map))
 		return (0);
@@ -75,7 +74,9 @@ int	validate_map(t_map *map, t_player *player)
 	if (!validate_player_count(player_count))
 		return (0);
 	init_player_direction(player, player_dir);
-	if (!check_borders(map->grid, map->width, map->height))
+	printf("width:%d\n", map->width);
+	printf("height:%d\n", map->height);
+	if (!check_borders_strict(map->grid, map->width, map->height))
 	{
 		printf("Error\nMap not surrounded by walls\n");
 		return (0);

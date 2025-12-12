@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rendering.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/11 16:27:19 by gkamanur          #+#    #+#             */
+/*   Updated: 2025/12/12 16:51:04 by gkamanur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RENDERING_H
 # define RENDERING_H
 
@@ -31,8 +43,8 @@ void	rotate_right(t_data *data);
 #endif
 
 // Lighting effects (lighting.c)
-int	apply_torch_lighting(int color, double distance);
-int	apply_floor_ceiling_lighting(t_data *data, int color, int y);
+int		apply_torch_lighting(int color, double distance);
+int		apply_floor_ceiling_lighting(t_data *data, int color, int y);
 
 // Performance optimization (performance.c)
 void	update_fps(void);
