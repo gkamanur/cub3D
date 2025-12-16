@@ -6,11 +6,11 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 15:38:32 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/08 15:14:43 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:17:24 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../../includes/parsing.h"
+#include "../../../includes/parsing.h"
 
 static int	refill_buffer(int fd, t_gnl_data *data)
 {
@@ -71,11 +71,11 @@ char	*gnl(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (data.buffer_read == 0)
-    {
+	{
 		data.buffer_pos = 0;
-	    data.buffer_read = 0;
-	    data.eof = 0;
-    }
+		data.buffer_read = 0;
+		data.eof = 0;
+	}
 	line_index = 0;
 	while (1)
 	{

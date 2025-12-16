@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 16:26:48 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/15 10:32:59 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/16 14:01:13 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ int	main(int argc, char **argv)
 	if (!parse_cub_file(argv[1], &data))
 	{
 		// return (clean_exit(&data, 2));
-		free_data(&data);
+	
+    	free_data(&data); // Make sure free_data handles NULL safely
+	
 		return (1);
 	}
 	// Print parsed config for verification

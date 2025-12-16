@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 14:59:48 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/12 15:12:56 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:45:50 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,21 @@ t_extent	get_row_extent(char *row)
 	}
 	return (ext);
 }
+
 int	validate_row_border(char *row, t_extent ext, int y)
 {
 	if (ext.start == -1)
 		return (1);
 	if (row[ext.start] != '1')
 	{
-		printf("Error\nLeft border invalid at (%d,%d): expected '1',\
-			found '%c'\n",
-				y,
-				ext.start,
-				row[ext.start]);
+		printf("Error\nLeft border invalid at (%d,%d)", y, ext.start);
+		printf(": expected '1',found '%c'\n", row[ext.start]);
 		return (0);
 	}
 	if (row[ext.end] != '1')
 	{
-		printf("Error\nRight border invalid at (%d,%d): expected '1',\
-			found '%c'\n",
-				y,
-				ext.end,
-				row[ext.end]);
+		printf("Error\nLeft border invalid at (%d,%d)", y, ext.end);
+		printf(": expected '1',found '%c'\n", row[ext.end]);
 		return (0);
 	}
 	return (1);

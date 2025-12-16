@@ -6,17 +6,18 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 18:17:31 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/15 10:29:55 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:03:09 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/parsing.h"
 
-int read_and_process_map(int fd, t_data *data, char ***out_lines,
-	int *out_count)
+int	read_and_process_map(int fd, t_data *data, char ***out_lines,
+		int *out_count)
 {
-	char **temp_lines;
-	int count;
+	char	**temp_lines;
+	int		count;
+
 	temp_lines = allocate_temp_lines(1024);
 	if (!temp_lines)
 		return (0);
@@ -41,7 +42,7 @@ int read_and_process_map(int fd, t_data *data, char ***out_lines,
 	return (1);
 }
 
-int allocate_grid(t_data * data, char **temp_lines, int count)
+int	allocate_grid(t_data *data, char **temp_lines, int count)
 {
 	data->map.height = count;
 	data->map.width = get_max_width(temp_lines, count);
@@ -51,10 +52,11 @@ int allocate_grid(t_data * data, char **temp_lines, int count)
 	return (1);
 }
 
-int parse_map(int fd, t_data *data)
+int	parse_map(int fd, t_data *data)
 {
-	char **temp_lines;
-	int count;
+	char	**temp_lines;
+	int		count;
+
 	if (!read_and_process_map(fd, data, &temp_lines, &count))
 		return (0);
 	if (!allocate_grid(data, temp_lines, count))

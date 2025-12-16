@@ -1,7 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/16 11:36:56 by gkamanur          #+#    #+#             */
+/*   Updated: 2025/12/16 11:37:01 by gkamanur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/parsing.h"
-
-
-
 
 int	check_map_empty(t_map *map)
 {
@@ -39,7 +48,7 @@ char	*my_strtrim(char *str)
 	result = malloc(len + 1);
 	if (!result)
 		return (NULL);
-	ft_strlcpy(result, start, len + 1);  // <- FIXED: was len, should be len + 1
+	ft_strlcpy(result, start, len + 1);
 	result[len] = '\0';
 	return (result);
 }

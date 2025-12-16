@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 16:27:15 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 10:46:02 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/16 12:02:36 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,16 @@ int	clean_exit(t_data *data, int fd);
 int	check_rgb_format(char *src);
 char	*extract_texture_path(char *trimmed);
 int	validate_xpm_path(void *mlx_ptr, const char *path);
+int	parse_and_validate_map(int fd, t_data *data);
+int	parse_and_validate_config(int fd, t_data *data);
+int	open_cub_file(const char *filename);
+int	check_extension(const char *filename);
+int	validate_player_count(int player_count);
+int	find_player(t_map *map, t_player *player, char *player_dir);
+int	scan_map_for_player(t_map *map, t_player *player, char *player_dir);
+void	set_player_position(t_player *player, int x, int y, char c, char *dir);
+int	parse_config_tokens(char *trimmed, t_data *data);
+int	handle_map_start(char *line, t_data *data);
+int	handle_parse_result(int presult, char *trimmed, char *line);
+int	config_complete(t_data *data);
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_validate.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/16 15:43:46 by gkamanur          #+#    #+#             */
+/*   Updated: 2025/12/16 15:43:48 by gkamanur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/parsing.h"
 
 int	check_texture_file(const char *path, const char *label)
@@ -7,34 +19,36 @@ int	check_texture_file(const char *path, const char *label)
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 	{
-		printf("Error\nCannot open %s texture: %s\n", label, path);
+		printf("Error Cannot open %s texture: %s\n", label, path);
 		return (0);
 	}
 	close(fd);
 	return (1);
 }
 
-static int check_xpm_extension(const char *path)
+static int	check_xpm_extension(const char *path)
 {
-    int len = strlen(path);
-    if (len < 4 || strcmp(path + len - 4, ".xpm") != 0)
-    {
-        printf("Error\nFile is not .xpm: %s\n", path);
-        return 0;
-    }
-    return 1;
+	int	len;
+
+	len = strlen(path);
+	if (len < 4 || strcmp(path + len - 4, ".xpm") != 0)
+	{
+		printf("Error\nFile is not .xpm: %s\n", path);
+		return (0);
+	}
+	return (1);
 }
 
-int validate_xpm_texture(const char *path, const char *label)
+int	validate_xpm_texture(const char *path, const char *label)
 {
-    if (!check_texture_file(path, label))
-        return 0;
-    if (!check_xpm_extension(path))
-    {
-        printf("Error\nInvalid %s texture file: %s\n", label, path);
-        return 0;
-    }
-    return 1;
+	if (!check_texture_file(path, label))
+		return (0);
+	if (!check_xpm_extension(path))
+	{
+		printf("Error\nInvalid %s texture file: %s\n", label, path);
+		return (0);
+	}
+	return (1);
 }
 
 int	check_texture_paths(t_textures *textures)
@@ -47,35 +61,6 @@ int	check_texture_paths(t_textures *textures)
 	}
 	return (1);
 }
-
-// int	validate_textures(t_textures *textures)
-// {
-// 	if (!check_texture_paths(textures))
-// 		return (0);
-// 	if (!check_texture_file(textures->north, "north"))
-// 		return (0);
-// 	if (!check_texture_file(textures->south, "south"))
-// 		return (0);
-// 	if (!check_texture_file(textures->west, "west"))
-// 		return (0);
-// 	if (!check_texture_file(textures->east, "east"))
-// 		return (0);
-// 	return (1);
-// }
-
-// int validate_textures(t_textures *textures)
-// {
-//     if (!check_texture_paths(textures))
-//         return 0;
-
-
-//     if (!validate_xpm_file(textures->north, "north")) return 0;
-//     if (!validate_xpm_file(textures->south, "south")) return 0;
-//     if (!validate_xpm_file(textures->west, "west")) return 0;
-//     if (!validate_xpm_file(textures->east, "east")) return 0;
-
-//     return 1;
-// }
 
 int	validate_colors(t_color *floor, t_color *ceiling)
 {

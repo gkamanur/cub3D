@@ -51,7 +51,10 @@ static int	handle_toggle_keys(int keycode, t_data *data)
 	if (keycode == KEY_L)
 	{
 		data->torch_mode = !data->torch_mode;
-		printf("Torch mode %s\n", data->torch_mode ? "ENABLED" : "DISABLED");
+		if (data->torch_mode)
+			printf("Torch mode %s\n","ENABLED");
+		else
+			printf("Torch mode %s\n","DISABLED");
 		request_redraw();
 		return (1);
 	}
