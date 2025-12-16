@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 16:23:22 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/12 15:14:01 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/15 11:53:32 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	parse_and_validate_config(int fd, t_data *data)
 {
 	if (!parse_config(fd, data, NULL))
 		return (0);
-	if (!validate_textures(&data->textures) || 
+	if (!parse_and_validate_textures(data) ||
 		!validate_colors(&data->floor, &data->ceiling))
 		return (0);
 	return (1);
@@ -53,6 +53,7 @@ static int	parse_and_validate_map(int fd, t_data *data)
 		printf("Error\nInvalid map\n");
 		return (0);
 	}
+	
 	if (!validate_map(&data->map, &data->player))
 		return (0);
 	return (1);
@@ -68,6 +69,13 @@ int	parse_cub_file(char *filename, t_data *data)
 	if (fd < 0)
 		return (0);
 	init_data(data);
+	data->mlx_ptr = mlx_init();
+    if (!data->mlx_ptr)
+    {
+        close(fd);
+        printf("Error\nFailed to initialize MiniLibX\n");
+        return 0;
+    }
 	if (!parse_and_validate_config(fd, data))
 	{
 		close(fd);

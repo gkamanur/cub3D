@@ -17,7 +17,7 @@ static void	debug_print_colors(t_color *floor, t_color *ceiling)
 	printf("  Ceiling: RGB(%d, %d, %d)\n", ceiling->r, ceiling->g, ceiling->b);
 }
 
-static void	debug_print_map_info(t_map *map)
+void	debug_print_map_info(t_map *map)
 {
 	int	y;
 

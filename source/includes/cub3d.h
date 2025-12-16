@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 16:27:10 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/11 16:27:11 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/14 22:10:01 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,4 +150,5 @@ void	draw_background(t_data *data);
 void	draw_minimap(t_data *data);
 void	debug_print_config(t_data *data);
 
+void	debug_print_map_info(t_map *map);
 #endif

@@ -13,19 +13,6 @@ static char	**detect_texture_target(char *trimmed, t_textures *t)
 	return (NULL);
 }
 
-static char	*extract_texture_path(char *trimmed)
-{
-	if (ft_strncmp(trimmed, "NO ", 3) == 0)
-		return (my_strtrim(trimmed + 3));
-	if (ft_strncmp(trimmed, "SO ", 3) == 0)
-		return (my_strtrim(trimmed + 3));
-	if (ft_strncmp(trimmed, "WE ", 3) == 0)
-		return (my_strtrim(trimmed + 3));
-	if (ft_strncmp(trimmed, "EA ", 3) == 0)
-		return (my_strtrim(trimmed + 3));
-	return (NULL);
-}
-
 static int	assign_texture(char **dest, char *path)
 {
 	if (!path || ft_strlen(path) == 0)
@@ -52,5 +39,7 @@ int	parse_texture(char *line, t_textures *textures)
 		return (free(trimmed), 0);
 	path = extract_texture_path(trimmed);
 	free(trimmed);
+	if (!path)
+		return (0);
 	return (assign_texture(dest, path));
 }

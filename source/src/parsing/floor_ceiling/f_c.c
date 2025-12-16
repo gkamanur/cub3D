@@ -6,16 +6,11 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:24:55 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/08 15:57:54 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/16 10:35:18 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/parsing.h"
-
-// char	*ft_trim_line(char *line)
-// {
-// 	return (my_strtrim(line));
-// }
 
 char	**select_cf_destination(char *trimmed, t_textures *textures)
 {

@@ -2,6 +2,7 @@
 
 
 
+
 int	check_map_empty(t_map *map)
 {
 	if (!map->grid || map->width == 0 || map->height == 0)
@@ -30,15 +31,15 @@ char	*my_strtrim(char *str)
 	while (*start && ft_isspace(*start))
 		start++;
 	if (*start == '\0')
-		return (strdup(""));
-	end = start + strlen(start) - 1;
+		return (ft_strdup(""));
+	end = start + ft_strlen(start) - 1;
 	while (end > start && ft_isspace(*end))
 		end--;
 	len = end - start + 1;
 	result = malloc(len + 1);
 	if (!result)
 		return (NULL);
-	strncpy(result, start, len);
+	ft_strlcpy(result, start, len + 1);  // <- FIXED: was len, should be len + 1
 	result[len] = '\0';
 	return (result);
 }

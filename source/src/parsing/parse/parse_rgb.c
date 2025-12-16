@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:38:40 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/04 17:42:14 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/16 10:36:57 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,20 @@ static int	count_parts(char **parts)
 	return (i);
 }
 
-static void	free_parts(char **parts, int n)
+static void	free_parts(char **parts)
 {
 	int	i;
 
+	if (!parts)
+		return ;
 	i = 0;
-	while (i < n)
+	while (parts[i])
 	{
 		free(parts[i]);
 		i++;
 	}
 	free(parts);
 }
-
 static int	assign_and_validate(char **parts, t_color *color)
 {
 	color->r = ft_atoi(parts[0]);
@@ -58,12 +59,10 @@ int	parse_rgb(char *str, t_color *color)
 	n = count_parts(parts);
 	if (n != 3)
 	{
-		while (n-- > 0)
-			free(parts[n]);
-		free(parts);
+		free_parts(parts);
 		return (0);
 	}
 	ok = assign_and_validate(parts, color);
-	free_parts(parts, 3);
+	free_parts(parts);
 	return (ok);
 }

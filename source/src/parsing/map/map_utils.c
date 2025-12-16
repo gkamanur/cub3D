@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 14:51:09 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/11 16:32:02 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/15 11:57:28 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,24 +91,16 @@ int	process_first_line(t_data *data, char **temp_lines, int *count)
 	return (1);
 }
 
-int	read_map_lines(int fd, char **temp_lines, int *count)
+int read_map_lines(int fd, char **temp_lines, int *count)
 {
-	char *line;
-	while ((line = gnl(fd)) != NULL)
-	{
-		if (is_map_line(line))
-		{
-			temp_lines[(*count)++] = line;
-			if (*count >= 1024)
-				break ;
-		}
-		else if (strlen(my_strtrim(line)) > 0)
-		{
-			free(line);
-			return (0);
-		}
-		else
-			free(line);
-	}
-	return (1);
+    char *line;
+
+    while ((line = gnl(fd)) != NULL)
+    {
+        temp_lines[(*count)++] = line;
+
+        if (*count >= 1024)
+            break;
+    }
+    return 1;
 }

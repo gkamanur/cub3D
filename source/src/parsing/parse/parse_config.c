@@ -25,9 +25,8 @@ static int	handle_parse_result(int presult, char *trimmed, char *line)
 	return (0);
 }
 
-static int	handle_map_start(char *line, char *trimmed, t_data *data)
+static int	handle_map_start(char *line, t_data *data)
 {
-	(void)trimmed;
 	data->map.first_line = line;
 	return (2);
 }
@@ -68,6 +67,7 @@ int	parse_config(int fd, t_data *data, char *line)
 		if (!trim_line(line, &trimmed))
 			continue ;
 		presult = parse_config_tokens(trimmed, data);
+		printf("presult :%d\n",presult);
 		if (presult != -1)
 		{
 			if (handle_parse_result(presult, trimmed, line) == 1)
@@ -76,10 +76,11 @@ int	parse_config(int fd, t_data *data, char *line)
 		}
 		if (config_complete(data))
 		{
-			handle_map_start(line, trimmed, data);
+			handle_map_start(line, data);
+			free(trimmed);
 			break ;
 		}
-		printf("Error\nInvalid config line: %s\n", trimmed);
+		printf("Error config line: %s\n", trimmed);
 		free(trimmed);
 		free(line);
 		return (0);

@@ -6,11 +6,32 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 18:17:31 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/15 10:29:55 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:56:42 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/parsing.h"
+
+int pad_and_copy_lines(t_data * data, char **temp_lines, int count)
+{
+	int i;
+	i = 0;
+	while (i < count)
+	{
+		data->map.grid[i] = pad_line(temp_lines[i], data->map.width);
+		free(temp_lines[i]);
+		if (!data->map.grid[i])
+		{
+			while (i-- > 0)
+				free(data->map.grid[i]);
+			free(data->map.grid);
+			return (0);
+		}
+		i++;
+	}
+	data->map.grid[count] = NULL;
+	return (1);
+}
 
 int read_and_process_map(int fd, t_data *data, char ***out_lines,
 	int *out_count)
@@ -67,7 +88,6 @@ int parse_map(int fd, t_data *data)
 		free_temp_lines(temp_lines, count);
 		return (0);
 	}
-	debug_print_map_info(&data->map);
 	free(temp_lines);
 	return (1);
 }
