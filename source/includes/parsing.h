@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 16:27:15 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 12:02:36 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:29:39 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int				is_map_line(char *line);
 int				get_max_width(char **lines, int count);
 char			*pad_line(char *line, int width);
 int				process_first_line(t_data *data, char **temp_lines, int *count);
-int				read_map_lines(int fd, char **temp_lines, int *count);
+int				read_map_lines_with_state(int fd, char **temp_lines, int *count, int map_started);
 int				pad_and_copy_lines(t_data *data, char **temp_lines, int count);
 int				read_and_process_map(int fd, t_data *data, char ***out_lines,
 					int *out_count);
@@ -85,8 +85,7 @@ int				check_texture_paths(t_textures *textures);
 int				validate_textures(t_textures *textures);
 int				validate_colors(t_color *floor, t_color *ceiling);
 int				check_borders(char **grid, int width, int height);
-void			set_player_position(t_player *player, int x, int y, char c,
-					char *dir);
+char			set_player_position(t_player *player, int x, int y, char c);
 int				scan_map_for_player(t_map *map, t_player *player,
 					char *player_dir);
 int				find_player(t_map *map, t_player *player, char *player_dir);
@@ -119,9 +118,11 @@ int	check_extension(const char *filename);
 int	validate_player_count(int player_count);
 int	find_player(t_map *map, t_player *player, char *player_dir);
 int	scan_map_for_player(t_map *map, t_player *player, char *player_dir);
-void	set_player_position(t_player *player, int x, int y, char c, char *dir);
 int	parse_config_tokens(char *trimmed, t_data *data);
-int	handle_map_start(char *line, t_data *data);
-int	handle_parse_result(int presult, char *trimmed, char *line);
+void	handle_map_start(char *line, t_data *data);
 int	config_complete(t_data *data);
+void	free_text_color(t_data *data);
+void	free_map(t_data *data);
+int count_map_lines(int fd);
+int	check_map_enclosure(char **grid, int width, int height);
 #endif

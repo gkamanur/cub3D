@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 15:38:32 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 15:17:24 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:26:45 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,18 @@ static char	*create_line(char *line, int line_index, int eof)
 char	*gnl(int fd)
 {
 	static t_gnl_data	data;
+	static int			last_fd = -1;
 	char				line[BUFFER_SIZE + 1];
 	int					line_index;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (data.buffer_read == 0)
+	if (fd != last_fd)
 	{
 		data.buffer_pos = 0;
 		data.buffer_read = 0;
 		data.eof = 0;
+		last_fd = fd;
 	}
 	line_index = 0;
 	while (1)

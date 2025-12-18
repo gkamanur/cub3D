@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 15:00:56 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 15:00:59 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/17 10:13:18 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ static char	**detect_texture_target(char *trimmed, t_textures *t)
 	return (NULL);
 }
 
-static int	assign_texture(char **dest, char *path)
-{
-	if (!path || ft_strlen(path) == 0)
-	{
-		if (path)
-			free(path);
-		return (0);
-	}
-	*dest = path;
-	return (1);
-}
+// static int	assign_texture(char **dest, char *path)
+// {
+// 	if (!path || ft_strlen(path) == 0)
+// 	{
+// 		// if (path)
+// 		// 	free(path);
+// 		return (0);
+// 	}
+// 	*dest = path;
+// 	return (1);
+// }
 
 int	parse_texture(char *line, t_textures *textures)
 {
@@ -53,5 +53,7 @@ int	parse_texture(char *line, t_textures *textures)
 	free(trimmed);
 	if (!path)
 		return (0);
-	return (assign_texture(dest, path));
+	// return (assign_texture(dest, path));
+	*dest = path;
+	return(1);
 }

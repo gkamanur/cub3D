@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 11:35:40 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 15:18:04 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/17 09:49:05 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ static int	find_row_bounds(t_map_extents *ext, int *top, int *bottom)
 int	check_no_empty_rows(t_map_extents *ext)
 {
 	int	y;
+	int	top;
+	int	bottom;
 
-	int top, bottom;
 	if (!find_row_bounds(ext, &top, &bottom))
 		return (0);
 	y = top;

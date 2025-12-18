@@ -26,6 +26,7 @@ SRC += $(SRC_DIR)/events/window.c \
 	   $(SRC_DIR)/events/events.c \
 	   $(SRC_DIR)/events/utils.c \
 	   $(SRC_DIR)/events/debug.c \
+	    $(SRC_DIR)/events/print_map.c \
 
 
 # Parsing module

@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 11:30:11 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 15:18:42 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/18 12:58:56 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int	validate_map(t_map *map, t_player *player)
 	if (!validate_player(map, player))
 		return (0);
 	if (!validate_map_extents(map))
+		return (0);
+	if (!check_map_enclosure(map->grid, map->width, map->height))
 		return (0);
 	if (!validate_map_borders(map))
 		return (0);

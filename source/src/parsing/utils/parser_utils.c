@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 11:36:56 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 11:37:01 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:26:59 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,22 +53,18 @@ char	*my_strtrim(char *str)
 	return (result);
 }
 
-int	trim_line(char *line, char **trimmed_out)
+int	trim_line(char *line, char **trimmed)
 {
-	char	*trimmed;
+	char	*tmp;
 
-	trimmed = my_strtrim(line);
-	if (!trimmed)
+	tmp = ft_strtrim(line, " \t\n");
+	if (!tmp)
+		return (0);
+	if (*tmp == '\0')
 	{
-		free(line);
+		free(tmp);
 		return (0);
 	}
-	if (ft_strlen(trimmed) == 0)
-	{
-		free(trimmed);
-		free(line);
-		return (0);
-	}
-	*trimmed_out = trimmed;
+	*trimmed = tmp;
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 11:34:57 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 15:18:20 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/17 09:48:20 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,9 @@ int	check_no_empty_columns(char **grid, t_map_extents *ext, int width)
 {
 	int			x;
 	t_extent	col;
+	int			min_left;
+	int			max_right;
 
-	int min_left, max_right;
 	if (!find_column_bounds(ext, &min_left, &max_right))
 		return (0);
 	x = min_left;

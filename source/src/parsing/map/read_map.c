@@ -6,11 +6,12 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 14:51:09 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 15:12:11 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/18 10:58:22 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/parsing.h"
+#define MAX_LINES 1024
 
 int	is_map_line(char *line)
 {
@@ -91,18 +92,74 @@ int	process_first_line(t_data *data, char **temp_lines, int *count)
 	return (1);
 }
 
-int	read_map_lines(int fd, char **temp_lines, int *count)
+int	is_all_spaces(const char *line)
 {
-	char	*line;
+	int	i;
 
-	line = gnl(fd);
-	while (line != NULL)
+	i = 0;
+	while (line[i] && line[i] != '\n')
 	{
-		temp_lines[*count] = line;
-		(*count)++;
-		if (*count >= 1024)
-			break ;
-		line = gnl(fd);
+		if (line[i] != ' ')
+			return (0);
+		i++;
 	}
 	return (1);
 }
+// static int has_non_space(const char *line)
+// {
+//     int i = 0;
+//     while (line[i] && line[i] != '\n')
+//     {
+//         if (line[i] != ' ')
+//             return 1;
+//         i++;
+//     }
+//     return 0;
+// }
+
+
+int read_map_lines_with_state(int fd, char **temp_lines, int *count, int map_started)
+{
+	char	*line;
+	char	*trimmed;
+	char	*next_line;
+
+	while ((line = gnl(fd)))
+	{
+		if (!is_map_line(line))
+		{
+			trimmed = my_strtrim(line);
+			if (trimmed && ft_strlen(trimmed) > 0)
+			{
+				free(trimmed);
+				free(line);
+				return (0);
+			}
+			if (trimmed)
+				free(trimmed);
+			if (map_started)
+			{
+				next_line = gnl(fd);
+				if (next_line && is_map_line(next_line))
+				{
+					printf("Error\nEmpty line inside map\n");
+					free(next_line);
+					free(line);
+					return (0);
+				}
+				if (next_line)
+					free(next_line);
+				free(line);
+				break;
+			}
+			free(line);
+			continue;
+		}
+		map_started = 1;
+		temp_lines[(*count)++] = line;
+		if (*count >= MAX_LINES)
+			break;
+	}
+	return (1);
+}
+

@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 11:25:36 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 15:13:19 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/18 10:49:12 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,14 @@ int	parse_and_validate_config(int fd, t_data *data)
 {
 	if (!parse_config(fd, data, NULL))
 		return (0);
+	debug_print_textures(&data->textures);
+	debug_print_colors(&data->floor, &data->ceiling);
 	if (!parse_and_validate_textures(data) || !validate_colors(&data->floor,
 			&data->ceiling))
+	{
+		free_data(data);
 		return (0);
+	}
 	return (1);
 }
 
@@ -52,10 +57,14 @@ int	parse_and_validate_map(int fd, t_data *data)
 {
 	if (!parse_map(fd, data))
 	{
+		free_map(data);
 		printf("Error\nInvalid map\n");
 		return (0);
 	}
 	if (!validate_map(&data->map, &data->player))
+	{
+		free_map(data);
 		return (0);
+	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 18:17:31 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/16 15:03:09 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:21:47 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	read_and_process_map(int fd, t_data *data, char ***out_lines,
 {
 	char	**temp_lines;
 	int		count;
+	int		map_started;
 
 	temp_lines = allocate_temp_lines(1024);
 	if (!temp_lines)
@@ -27,7 +28,8 @@ int	read_and_process_map(int fd, t_data *data, char ***out_lines,
 		free(temp_lines);
 		return (0);
 	}
-	if (!read_map_lines(fd, temp_lines, &count))
+	map_started = (count > 0);
+	if (!read_map_lines_with_state(fd, temp_lines, &count, map_started))
 	{
 		free_temp_lines(temp_lines, count);
 		return (0);
@@ -69,7 +71,8 @@ int	parse_map(int fd, t_data *data)
 		free_temp_lines(temp_lines, count);
 		return (0);
 	}
-	debug_print_map_info(&data->map);
+	// debug_print_map_info(&data->map);
+	debug_print_map_detailed(&data->map);
 	free(temp_lines);
 	return (1);
 }

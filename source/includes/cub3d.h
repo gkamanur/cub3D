@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 16:27:10 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/14 22:10:01 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:36:07 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
    ======================================== */
 
 // Window settings
+# define MAX_LINES 1024
 # define WIN_WIDTH 3480
 # define WIN_HEIGHT 2160
 # define WIN_TITLE "Cub3D"
@@ -128,6 +129,12 @@ typedef struct s_data
 	t_player	player;		// Player info
 }	t_data;
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+
+
 /* ========================================
    FUNCTION PROTOTYPES
    ======================================== */
@@ -149,6 +156,11 @@ void	error_exit(char *message);
 void	draw_background(t_data *data);
 void	draw_minimap(t_data *data);
 void	debug_print_config(t_data *data);
+void	debug_print_colors(t_color *floor, t_color *ceiling);
+void	debug_print_textures(t_textures *tex);
 
-void	debug_print_map_info(t_map *map);
+void	print_column_numbers(int width);
+void	print_horizontal_border(int width);
+void	print_map_row(int y, t_map *map);
+void	debug_print_map_detailed(t_map *map);
 #endif

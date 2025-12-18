@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   debug.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/18 13:33:01 by gkamanur          #+#    #+#             */
+/*   Updated: 2025/12/18 13:38:26 by gkamanur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3d.h"
 #include "../../includes/rendering.h"
 
-static void	debug_print_textures(t_textures *tex)
+void	debug_print_textures(t_textures *tex)
 {
 	printf("Textures:\n");
 	printf("  North:  %s\n", tex->north);
@@ -10,29 +22,14 @@ static void	debug_print_textures(t_textures *tex)
 	printf("  East:   %s\n", tex->east);
 }
 
-static void	debug_print_colors(t_color *floor, t_color *ceiling)
+void	debug_print_colors(t_color *floor, t_color *ceiling)
 {
 	printf("\nColors:\n");
 	printf("  Floor:   RGB(%d, %d, %d)\n", floor->r, floor->g, floor->b);
 	printf("  Ceiling: RGB(%d, %d, %d)\n", ceiling->r, ceiling->g, ceiling->b);
 }
 
-void	debug_print_map_info(t_map *map)
-{
-	int	y;
-
-	printf("\nMap:\n");
-	printf("  Size:    %d x %d\n", map->width, map->height);
-	printf("  Grid:\n");
-	y = 0;
-	while (y < map->height)
-	{
-		printf("    [%s]\n", map->grid[y]);
-		y++;
-	}
-}
-
-static void	debug_print_player_info(t_player *player)
+void	debug_print_player_info(t_player *player)
 {
 	printf("\nPlayer:\n");
 	printf("  Position:  (%.2f, %.2f)\n", player->x, player->y);
@@ -45,7 +42,7 @@ void	debug_print_config(t_data *data)
 	printf("\n========== PARSED CONFIGURATION ==========\n");
 	debug_print_textures(&data->textures);
 	debug_print_colors(&data->floor, &data->ceiling);
-	debug_print_map_info(&data->map);
+	debug_print_map_detailed(&data->map);
 	debug_print_player_info(&data->player);
 	printf("==========================================\n\n");
 }
