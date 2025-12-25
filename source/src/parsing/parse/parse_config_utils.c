@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 15:14:47 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/18 13:25:39 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:36:59 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,24 @@ int	config_complete(t_data *data)
 		&& data->floor.r != -1 && data->ceiling.r != -1);
 }
 
-int handle_parse_result(int presult, char *trimmed, char *line)
+int	handle_parse_result(int presult, char *trimmed, char *line)
 {
-    if (presult == 1)
-    {
-        free(trimmed);
-        free(line);
-        return 1;
-    }
-
-    if (presult == 0)
-    {
-        printf("Error\nInvalid or duplicate config line\n");
-        free(trimmed);
-        free(line);
-        return 0;
-    }
-    free(trimmed);
-    free(line);
-    return 0;
+	if (presult == 1)
+	{
+		free(trimmed);
+		free(line);
+		return (1);
+	}
+	if (presult == 0)
+	{
+		printf("Error\nInvalid or duplicate config line\n");
+		free(trimmed);
+		free(line);
+		return (0);
+	}
+	free(trimmed);
+	free(line);
+	return (0);
 }
 
 void	handle_map_start(char *line, t_data *data)

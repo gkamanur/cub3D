@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 16:27:15 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/18 13:29:39 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/19 15:03:55 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ int				is_map_line(char *line);
 int				get_max_width(char **lines, int count);
 char			*pad_line(char *line, int width);
 int				process_first_line(t_data *data, char **temp_lines, int *count);
-int				read_map_lines_with_state(int fd, char **temp_lines, int *count, int map_started);
+int				read_map_lines_with_state(int fd, char **temp_lines, int *count,
+					int map_started);
 int				pad_and_copy_lines(t_data *data, char **temp_lines, int count);
 int				read_and_process_map(int fd, t_data *data, char ***out_lines,
 					int *out_count);
@@ -76,7 +77,7 @@ int				parse_map(int fd, t_data *data);
 
 void			init_data(t_data *data);
 int				parse_config(int fd, t_data *data, char *line);
-int pad_and_copy_lines(t_data *data, char **temp_lines, int count);
+int				pad_and_copy_lines(t_data *data, char **temp_lines, int count);
 int				parse_rgb(char *str, t_color *color);
 int				parse_texture(char *line, t_textures *textures);
 int				parse_cub_file(char *filename, t_data *data);
@@ -101,28 +102,29 @@ int				get_column_extent(char **grid, int x, int height,
 int				check_column_border(char **grid, int x, t_extent col);
 int				validate_column(char **grid, int x, int height);
 int				check_borders_strict(char **grid, int width, int height);
-void free_data(t_data *data);
-int check_no_empty_rows(t_map_extents *ext);
+void			free_data(t_data *data);
+int				check_no_empty_rows(t_map_extents *ext);
 // int check_internal_spaces(t_map *map);
-int check_no_empty_columns(char **grid, t_map_extents *ext, int width);
-int parse_and_validate_textures(t_data *data);
-
-int	clean_exit(t_data *data, int fd);
-int	check_rgb_format(char *src);
-char	*extract_texture_path(char *trimmed);
-int	validate_xpm_path(void *mlx_ptr, const char *path);
-int	parse_and_validate_map(int fd, t_data *data);
-int	parse_and_validate_config(int fd, t_data *data);
-int	open_cub_file(const char *filename);
-int	check_extension(const char *filename);
-int	validate_player_count(int player_count);
-int	find_player(t_map *map, t_player *player, char *player_dir);
-int	scan_map_for_player(t_map *map, t_player *player, char *player_dir);
-int	parse_config_tokens(char *trimmed, t_data *data);
-void	handle_map_start(char *line, t_data *data);
-int	config_complete(t_data *data);
-void	free_text_color(t_data *data);
-void	free_map(t_data *data);
-int count_map_lines(int fd);
-int	check_map_enclosure(char **grid, int width, int height);
+int				check_no_empty_columns(char **grid, t_map_extents *ext,
+					int width);
+int				parse_and_validate_textures(t_data *data);
+int				clean_exit(t_data *data, int fd);
+int				check_rgb_format(char *src);
+char			*extract_texture_path(char *trimmed);
+int				validate_xpm_path(void *mlx_ptr, const char *path);
+int				parse_and_validate_map(int fd, t_data *data);
+int				parse_and_validate_config(int fd, t_data *data);
+int				open_cub_file(const char *filename);
+int				check_extension(const char *filename);
+int				validate_player_count(int player_count);
+int				find_player(t_map *map, t_player *player, char *player_dir);
+int				scan_map_for_player(t_map *map, t_player *player,
+					char *player_dir);
+int				parse_config_tokens(char *trimmed, t_data *data);
+void			handle_map_start(char *line, t_data *data);
+int				config_complete(t_data *data);
+void			free_text_color(t_data *data);
+void			free_map(t_data *data);
+int				count_map_lines(int fd);
+int				check_map_enclosure(char **grid, int width, int height);
 #endif

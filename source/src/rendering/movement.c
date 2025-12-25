@@ -4,20 +4,38 @@
 #define ROT_SPEED 0.05
 
 // Check if position is valid (not a wall)
-static int	is_valid_position(t_data *data, double x, double y)
-{
-	int	map_x;
-	int	map_y;
+// static int	is_valid_position(t_data *data, double x, double y)
+// {
+// 	int	map_x;
+// 	int	map_y;
 
-	map_x = (int)x;
-	map_y = (int)y;
-	// Check bounds
-	if (map_x < 0 || map_x >= data->map.width ||
-		map_y < 0 || map_y >= data->map.height)
+// 	map_x = (int)x;
+// 	map_y = (int)y;
+// 	// Check bounds
+// 	if (map_x < 0 || map_x >= data->map.width ||
+// 		map_y < 0 || map_y >= data->map.height)
+// 		return (0);
+// 	// Check if position is wall
+// 	if (data->map.grid[map_y][map_x] == '1')
+// 		return (0);
+// 	return (1);
+// }
+
+int	is_valid_position(t_data *data, double x, double y)
+{
+	double	margin;
+	
+	margin = 0.2;
+	
+	if (data->map.grid[(int)(y - margin)][(int)(x - margin)] == '1')
 		return (0);
-	// Check if position is wall
-	if (data->map.grid[map_y][map_x] == '1')
+	if (data->map.grid[(int)(y - margin)][(int)(x + margin)] == '1')
 		return (0);
+	if (data->map.grid[(int)(y + margin)][(int)(x - margin)] == '1')
+		return (0);
+	if (data->map.grid[(int)(y + margin)][(int)(x + margin)] == '1')
+		return (0);
+	
 	return (1);
 }
 

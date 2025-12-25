@@ -6,7 +6,7 @@
 /*   By: gkamanur <gkamanur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 15:10:13 by gkamanur          #+#    #+#             */
-/*   Updated: 2025/12/17 12:54:10 by gkamanur         ###   ########.fr       */
+/*   Updated: 2025/12/19 15:00:13 by gkamanur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,11 @@ void	free_map(t_data *data)
 		free(data->map.grid);
 		data->map.grid = NULL;
 	}
-
 	if (data->map.first_line)
 	{
 		free(data->map.first_line);
 		data->map.first_line = NULL;
 	}
-
 	data->map.width = 0;
 	data->map.height = 0;
 }
@@ -55,8 +53,7 @@ static void	free_mlx(t_data *data)
 void	free_text_color(t_data *data)
 {
 	if (!data)
-		return;
-		
+		return ;
 	if (data->textures.north)
 		free(data->textures.north);
 	if (data->textures.south)
@@ -76,6 +73,7 @@ void	free_text_color(t_data *data)
 	data->textures.floor_tex = NULL;
 	data->textures.ceiling_tex = NULL;
 }
+
 void	free_data(t_data *data)
 {
 	if (!data)
